@@ -1,0 +1,340 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/nyantishedrick/diabetes-prediction-africa/blob/main/diabetes-predictions-africa\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Wf5KrEb6vrkR"
+      },
+      "source": [
+        "# Welcome to Colab!"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"My name is Shedrick Nyanti\")\n",
+        "print(\"I am building a diabetes prediction system for Africa\")\n",
+        "print(\"My mission starts today\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JPDzmB5KqZp3",
+        "outputId": "fd146799-46ae-492c-ed2a-e18fb28a0fba"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "My name is Shedrick Nyanti\n",
+            "I am building a diabetes prediction system for Africa\n",
+            "My mission starts today\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "# Load directly from a reliable source\n",
+        "url = \"https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.csv\"\n",
+        "\n",
+        "df = pd.read_csv(url, header=None)\n",
+        "# Add column names\n",
+        "df.columns = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreesFunction', 'Age ', 'Outcome' ]\n",
+        "\n",
+        "print(\"Dataset loaded successfully\")\n",
+        "print(\"Shape:\", df.shape)\n",
+        "print(df.head())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Nfr4qQ-f-fVw",
+        "outputId": "4792ce1c-1ccf-4422-d72f-c9acafd0f402"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Dataset loaded successfully\n",
+            "Shape: (768, 9)\n",
+            "   Pregnancies  Glucose  BloodPressure  SkinThickness  Insulin   BMI  \\\n",
+            "0            6      148             72             35        0  33.6   \n",
+            "1            1       85             66             29        0  26.6   \n",
+            "2            8      183             64              0        0  23.3   \n",
+            "3            1       89             66             23       94  28.1   \n",
+            "4            0      137             40             35      168  43.1   \n",
+            "\n",
+            "   DiabetesPedigreesFunction  Age   Outcome  \n",
+            "0                      0.627    50        1  \n",
+            "1                      0.351    31        0  \n",
+            "2                      0.672    32        1  \n",
+            "3                      0.167    21        0  \n",
+            "4                      2.288    33        1  \n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"Basic Statistics:\")\n",
+        "print(df.describe())\n",
+        "\n",
+        "print(\"\\nHow many diabetic vs non-diabetic patients:\")\n",
+        "print(df['Outcome'].value_counts())\n",
+        "\n",
+        "print(\"\\nAverage glucose by outcome:\")\n",
+        "print(df.groupby('Outcome')['Glucose'].mean())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "QS7T2ln6rFt0",
+        "outputId": "0325f5b4-fdf8-47ab-fd07-54390d5ae6d3"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Basic Statistics:\n",
+            "       Pregnancies     Glucose  BloodPressure  SkinThickness     Insulin  \\\n",
+            "count   768.000000  768.000000     768.000000     768.000000  768.000000   \n",
+            "mean      3.845052  120.894531      69.105469      20.536458   79.799479   \n",
+            "std       3.369578   31.972618      19.355807      15.952218  115.244002   \n",
+            "min       0.000000    0.000000       0.000000       0.000000    0.000000   \n",
+            "25%       1.000000   99.000000      62.000000       0.000000    0.000000   \n",
+            "50%       3.000000  117.000000      72.000000      23.000000   30.500000   \n",
+            "75%       6.000000  140.250000      80.000000      32.000000  127.250000   \n",
+            "max      17.000000  199.000000     122.000000      99.000000  846.000000   \n",
+            "\n",
+            "              BMI  DiabetesPedigreesFunction        Age      Outcome  \n",
+            "count  768.000000                 768.000000  768.000000  768.000000  \n",
+            "mean    31.992578                   0.471876   33.240885    0.348958  \n",
+            "std      7.884160                   0.331329   11.760232    0.476951  \n",
+            "min      0.000000                   0.078000   21.000000    0.000000  \n",
+            "25%     27.300000                   0.243750   24.000000    0.000000  \n",
+            "50%     32.000000                   0.372500   29.000000    0.000000  \n",
+            "75%     36.600000                   0.626250   41.000000    1.000000  \n",
+            "max     67.100000                   2.420000   81.000000    1.000000  \n",
+            "\n",
+            "How many diabetic vs non-diabetic patients:\n",
+            "Outcome\n",
+            "0    500\n",
+            "1    268\n",
+            "Name: count, dtype: int64\n",
+            "\n",
+            "Average glucose by outcome:\n",
+            "Outcome\n",
+            "0    109.980000\n",
+            "1    141.257463\n",
+            "Name: Glucose, dtype: float64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.metrics import accuracy_score, classification_report\n",
+        "\n",
+        "# Step 1: Seperate features from target\n",
+        "X = df.drop('Outcome', axis=1)\n",
+        "y = df['Outcome']\n",
+        "\n",
+        "# Step 2: Split data - 80% training, 20% testing\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n",
+        "\n",
+        "print(\"Training patients:\", X_train.shape[0])\n",
+        "print(\"Testing patients:\", X_test.shape[0])\n",
+        "\n",
+        "#+ Step 3: Train the model\n",
+        "model = LogisticRegression(max_iter=1000)\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Step 4: Test the model\n",
+        "predictions = model.predict(X_test)\n",
+        "accuracy = accuracy_score(y_test, predictions)\n",
+        "\n",
+        "print(\"\\nModel Accuracy:\", round(accuracy * 100, 2), \"%\")\n",
+        "print(\"\\nDetailed Report:\")\n",
+        "print(classification_report(y_test, predictions))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "OZh6wdsJwLTt",
+        "outputId": "e4a24b19-4ccc-430c-d6cd-c3f36db4881c"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Training patients: 614\n",
+            "Testing patients: 154\n",
+            "\n",
+            "Model Accuracy: 74.68 %\n",
+            "\n",
+            "Detailed Report:\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       0.81      0.79      0.80        99\n",
+            "           1       0.64      0.67      0.65        55\n",
+            "\n",
+            "    accuracy                           0.75       154\n",
+            "   macro avg       0.73      0.73      0.73       154\n",
+            "weighted avg       0.75      0.75      0.75       154\n",
+            "\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#!/usr/bin/env python\n",
+        "# coding: utf-8\n",
+        "\n",
+        "# Install imbalanced-learn Library\n",
+        "!pip install imbalanced-learn -q\n",
+        "\n",
+        "import pandas as pd\n",
+        "from imblearn.over_sampling import SMOTE\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.metrics import classification_report, accuracy_score\n",
+        "\n",
+        "# Load the dataset (redundant if run sequentially, but ensures df is defined if this cell is run alone)\n",
+        "url = \"https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.csv\"\n",
+        "df = pd.read_csv(url, header=None)\n",
+        "df.columns = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreesFunction', 'Age ', 'Outcome']\n",
+        "\n",
+        "# Step 1: Split FIRST before balancing\n",
+        "X = df.drop('Outcome', axis=1)\n",
+        "y = df['Outcome']\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42 )\n",
+        "\n",
+        "\n",
+        "# Step 2: Apply SMOTE to training data ONLY\n",
+        "smote = SMOTE(random_state=42)\n",
+        "X_train_balanced, y_train_balanced = smote.fit_resample(X_train, y_train)\n",
+        "\n",
+        "print(\"Before SMOTE:\")\n",
+        "print(y_train.value_counts())\n",
+        "print(\"\\nAfter SMOTE\")\n",
+        "print(y_train_balanced.value_counts())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "rfvor4Vkoie6",
+        "outputId": "76ae23be-7f2c-4d4c-fb85-31b6fa42474e"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Before SMOTE:\n",
+            "Outcome\n",
+            "0    401\n",
+            "1    213\n",
+            "Name: count, dtype: int64\n",
+            "\n",
+            "After SMOTE\n",
+            "Outcome\n",
+            "0    401\n",
+            "1    401\n",
+            "Name: count, dtype: int64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Step 3: Train model on balanced data\n",
+        "model_smote = LogisticRegression(max_iter=1000)\n",
+        "model_smote.fit(X_train_balanced, y_train_balanced)\n",
+        "\n",
+        "# Step 4: Evaluate on ORIGINAL test set\n",
+        "predictions_smote = model_smote.predict(X_test)\n",
+        "accuracy_smote =accuracy_score(y_test, predictions_smote)\n",
+        "\n",
+        "print(\"Model Accuracy after SMOTE:.\", round(accuracy_smote * 100, 2), \"%\")\n",
+        "print(\"\\nDetailed Report:\")\n",
+        "print(classification_report(y_test, predictions_smote))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "TG2Q3wlYwKHw",
+        "outputId": "5b551f7e-11b5-44b8-a104-4bc36323aa68"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Model Accuracy after SMOTE:. 69.48 %\n",
+            "\n",
+            "Detailed Report:\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       0.81      0.69      0.74        99\n",
+            "           1       0.56      0.71      0.62        55\n",
+            "\n",
+            "    accuracy                           0.69       154\n",
+            "   macro avg       0.68      0.70      0.68       154\n",
+            "weighted avg       0.72      0.69      0.70       154\n",
+            "\n"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
